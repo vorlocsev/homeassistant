@@ -3,9 +3,9 @@
 # Installs a separate YAML dashboard; never replaces the default Overview.
 set -eu
 
-CONFIG_DIR="\${AURORA_CONFIG_DIR:-/config}"
+CONFIG_DIR="${AURORA_CONFIG_DIR:-/config}"
 CONFIG_FILE="$CONFIG_DIR/configuration.yaml"
-BASE_URL="\${AURORA_BASE_URL:-https://raw.githubusercontent.com/vorlocsev/homeassistant/master/aurora-home}"
+BASE_URL="${AURORA_BASE_URL:-https://raw.githubusercontent.com/vorlocsev/homeassistant/master/aurora-home}"
 DASH_FILE="$CONFIG_DIR/aurora_home.yaml"
 THEME_FILE="$CONFIG_DIR/themes/aurora_home.yaml"
 
@@ -179,7 +179,7 @@ DONE=1
 say "Готово: новая панель добавлена. Резервная копия: $BACKUP_DIR"
 say "Тема: $([ "$USE_THEME" = 1 ] && printf 'Aurora Home' || printf 'стандартная')"
 
-if [ "\${AURORA_NO_RESTART:-0}" = 1 ]; then
+if [ "${AURORA_NO_RESTART:-0}" = 1 ]; then
   say "Перезапуск пропущен (AURORA_NO_RESTART=1)."
 else
   say "Перезапускаю Home Assistant Core для регистрации панели..."
