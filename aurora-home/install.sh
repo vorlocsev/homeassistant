@@ -84,35 +84,24 @@ fetch "$BASE_URL/aurora_home_theme.yaml" "$TMP/aurora_home_theme.yaml"
 grep -q '^views:' "$TMP/aurora_dashboard.yaml" || fail "Получена некорректная панель."
 grep -q '^Aurora Home:' "$TMP/aurora_home_theme.yaml" || fail "Получена некорректная тема."
 
-USE_THEME=1
-if grep -Eq '^frontend:[[:space:]]*![^[:space:]]+' "$CONFIG_FILE"; then
-  USE_THEME=0
-  say "Тема не подключается: frontend определён через !include. Панель всё равно будет установлена."
-elif grep -Eq '^  themes:[[:space:]]*' "$CONFIG_FILE"; then
-  if ! grep -Eq '^  themes:[[:space:]]*!include_dir_merge_named[[:space:]]+themes([[:space:]]|$)' "$CONFIG_FILE"; then
-    USE_THEME=0
-    say "Тема не подключается: найдено нестандартное объявление frontend.themes."
-  fi
+# Never insert or reindent frontend: existing Home Assistant YAML may use
+# one space, two spaces or includes. Installing the theme is safe ONLY when the
+# existing frontend block already imports /config/themes.
+USE_THEME=0
+if awk '
+  /^frontend:[[:space:]]*($|#)/ {inside=1; next}
+  inside && /^[^[:space:]#]/ {inside=0}
+  inside && /^[[:space:]]+themes:[[:space:]]*!include_dir_merge_named[[:space:]]+themes([[:space:]]|$)/ {found=1}
+  END {exit(found?0:1)}
+' "$CONFIG_FILE"; then
+  USE_THEME=1
+else
+  say "Конфигурацию frontend не изменяю; применяю вариант панели без отдельной темы."
 fi
 
 BACKUP_DIR="$CONFIG_DIR/.aurora-home-backups/$(date +%Y%m%d-%H%M%S)-$$"
 mkdir -p "$BACKUP_DIR"
 cp -p "$CONFIG_FILE" "$BACKUP_DIR/configuration.yaml"
-
-if [ "$USE_THEME" = 1 ] && ! grep -Eq '^  themes:[[:space:]]*' "$CONFIG_FILE"; then
-  if grep -Eq '^frontend:[[:space:]]*($|#)' "$CONFIG_FILE"; then
-    awk '
-      function inject() { print "  themes: !include_dir_merge_named themes" }
-      /^frontend:[[:space:]]*($|#)/ { inside=1; print; next }
-      inside && /^[^[:space:]#]/ { inject(); inside=0 }
-      { print }
-      END { if (inside) inject() }
-    ' "$CONFIG_FILE" > "$TMP/config.tmp"
-    cp "$TMP/config.tmp" "$CONFIG_FILE"
-  else
-    printf '\nfrontend:\n  themes: !include_dir_merge_named themes\n' >> "$CONFIG_FILE"
-  fi
-fi
 
 if grep -Eq '^lovelace:[[:space:]]*($|#)' "$CONFIG_FILE"; then
   if grep -Eq '^  dashboards:[[:space:]]*($|#)' "$CONFIG_FILE"; then
