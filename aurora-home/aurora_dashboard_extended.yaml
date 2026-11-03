@@ -1,0 +1,869 @@
+title: Aurora Home
+views:
+  - title: Главная
+    path: home
+    icon: mdi:home-variant-outline
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      badges_position: bottom
+      card:
+        type: markdown
+        content: >-
+          # ✨ AURORA HOME
+
+          {% set h = now().hour %}
+          {% if h < 6 %}Доброй ночи{% elif h < 12 %}Доброе утро{% elif h < 18 %}Добрый день{% else %}Добрый вечер{% endif %}.
+          Дом, музыка и техника в одном месте · {{ now().strftime('%d.%m.%Y') }}
+    badges:
+      - type: entity
+        entity: sensor.processor_temperature
+        name: Raspberry Pi
+        icon: mdi:raspberry-pi
+        show_name: true
+      - type: entity
+        entity: sensor.katana_cpu_usage
+        name: Katana
+        icon: mdi:laptop
+        show_name: true
+      - type: entity
+        entity: media_player.vorloctv_2
+        name: ТВ
+        icon: mdi:television
+        show_name: true
+    sections:
+      - type: grid
+        background:
+          color: '#0D3548'
+          opacity: 24
+        cards:
+          - type: heading
+            heading: Быстрый доступ
+            icon: mdi:gesture-tap
+          - type: tile
+            entity: media_player.gostinaia_yandexstation
+            name: Яндекс Станция
+            icon: mdi:speaker
+            color: cyan
+            show_entity_picture: true
+          - type: tile
+            entity: media_player.vorloctv_2
+            name: Телевизор
+            icon: mdi:television
+            color: indigo
+            show_entity_picture: true
+          - type: tile
+            entity: media_player.ai_pont
+            name: Cast / AI Pont
+            icon: mdi:cast-connected
+            color: blue
+          - type: markdown
+            content: >-
+              **Медиа под рукой** 🎶
+
+              Нажми на устройство, чтобы открыть штатные элементы управления. Полные плееры находятся на вкладке **Музыка**.
+      - type: grid
+        background:
+          color: '#14324C'
+          opacity: 22
+        cards:
+          - type: heading
+            heading: Компьютер Katana
+            icon: mdi:laptop
+            badges:
+              - entity: sensor.katana_cpu_usage
+                name: CPU
+          - type: tile
+            entity: sensor.katana_cpu_usage
+            name: Процессор
+            icon: mdi:cpu-64-bit
+            color: cyan
+          - type: tile
+            entity: sensor.katana_available_memory
+            name: Доступная память
+            icon: mdi:memory
+            color: teal
+          - type: tile
+            entity: sensor.katana_uptime
+            name: Время работы
+            icon: mdi:timer-outline
+          - type: tile
+            entity: sensor.katana_memory_usage
+            name: Использование памяти
+            icon: mdi:memory
+      - type: grid
+        background:
+          color: '#123A31'
+          opacity: 20
+        cards:
+          - type: heading
+            heading: Сервер Home Assistant
+            icon: mdi:raspberry-pi
+          - type: tile
+            entity: sensor.processor_temperature
+            name: Температура процессора
+            icon: mdi:thermometer
+            color: orange
+          - type: tile
+            entity: sensor.processor_use_percent
+            name: Нагрузка CPU
+            icon: mdi:chip
+            color: teal
+          - type: tile
+            entity: sensor.memory_use_percent
+            name: Использование RAM
+            icon: mdi:memory
+            color: cyan
+          - type: tile
+            entity: sensor.memory_use
+            name: Занятая память
+            icon: mdi:memory
+      - type: grid
+        cards:
+          - type: heading
+            heading: Сеть и устройства
+            icon: mdi:access-point-network
+          - type: tile
+            entity: sensor.r4s01_kettle_rssi
+            name: Чайник · сигнал
+            icon: mdi:kettle
+            color: cyan
+          - type: tile
+            entity: sensor.r4s0_gate_rssi
+            name: Шлюз · сигнал
+            icon: mdi:router-wireless
+            color: cyan
+
+  - title: Музыка
+    path: media
+    icon: mdi:music-circle-outline
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      card:
+        type: markdown
+        content: >-
+          # 🎧 Музыка и развлечения
+
+          Яндекс Станция, телевизор и Cast. Полноразмерные плееры показывают обложки и доступные кнопки.
+    sections:
+      - type: grid
+        background:
+          color: '#194359'
+          opacity: 24
+        cards:
+          - type: heading
+            heading: Гостиная · Станция
+            icon: mdi:speaker-wireless
+          - type: media-control
+            entity: media_player.gostinaia_yandexstation
+      - type: grid
+        background:
+          color: '#26395B'
+          opacity: 24
+        cards:
+          - type: heading
+            heading: Телевизор
+            icon: mdi:television-play
+          - type: media-control
+            entity: media_player.vorloctv_2
+      - type: grid
+        background:
+          color: '#153F42'
+          opacity: 24
+        cards:
+          - type: heading
+            heading: Cast
+            icon: mdi:cast-audio
+          - type: media-control
+            entity: media_player.ai_pont
+
+  - title: Katana
+    path: katana
+    icon: mdi:laptop
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      card:
+        type: markdown
+        content: >-
+          # 💻 KATANA
+
+          Состояние компьютера по датчикам Home Assistant. Выключение здесь специально не добавлено без подтверждённой сущности питания.
+    sections:
+      - type: grid
+        background:
+          color: '#173651'
+          opacity: 24
+        cards:
+          - type: heading
+            heading: Нагрузка
+            icon: mdi:speedometer
+          - type: gauge
+            entity: sensor.katana_cpu_usage
+            name: CPU
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 60
+              red: 85
+          - type: tile
+            entity: sensor.katana_memory_usage
+            name: Занятая память
+            icon: mdi:memory
+          - type: tile
+            entity: sensor.katana_available_memory
+            name: Доступно памяти
+            icon: mdi:memory
+          - type: tile
+            entity: sensor.katana_uptime
+            name: Время работы
+            icon: mdi:clock-outline
+      - type: grid
+        cards:
+          - type: heading
+            heading: CPU · последние 6 часов
+            icon: mdi:chart-line
+          - type: history-graph
+            entities:
+              - entity: sensor.katana_cpu_usage
+                name: Загрузка процессора
+            hours_to_show: 6
+            refresh_interval: 60
+      - type: grid
+        cards:
+          - type: heading
+            heading: Память · последние 6 часов
+            icon: mdi:chart-areaspline
+          - type: history-graph
+            entities:
+              - entity: sensor.katana_memory_usage
+                name: Использование памяти
+              - entity: sensor.katana_available_memory
+                name: Доступная память
+            hours_to_show: 6
+            refresh_interval: 60
+
+  - title: Сервер
+    path: server
+    icon: mdi:raspberry-pi
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      badges_position: bottom
+      card:
+        type: markdown
+        content: >-
+          # ⚙️ RASPBERRY PI 4
+
+          Текущая нагрузка и температурный режим. Эти графики строятся по уже существующей истории Recorder.
+    badges:
+      - type: entity
+        entity: sensor.processor_temperature
+        name: Температура
+        show_name: true
+    sections:
+      - type: grid
+        background:
+          color: '#16392F'
+          opacity: 22
+        cards:
+          - type: heading
+            heading: Система
+            icon: mdi:server
+          - type: gauge
+            entity: sensor.processor_use_percent
+            name: CPU · %
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 65
+              red: 85
+          - type: gauge
+            entity: sensor.memory_use_percent
+            name: RAM · %
+            min: 0
+            max: 100
+            needle: true
+            severity:
+              green: 0
+              yellow: 70
+              red: 90
+          - type: gauge
+            entity: sensor.processor_temperature
+            name: CPU · °C
+            min: 0
+            max: 90
+            needle: true
+            severity:
+              green: 0
+              yellow: 65
+              red: 80
+      - type: grid
+        cards:
+          - type: heading
+            heading: Ресурсы · последние 6 часов
+            icon: mdi:chart-areaspline
+          - type: history-graph
+            entities:
+              - entity: sensor.processor_use_percent
+                name: CPU
+              - entity: sensor.memory_use_percent
+                name: RAM
+            hours_to_show: 6
+            refresh_interval: 60
+      - type: grid
+        cards:
+          - type: heading
+            heading: Температура · последние 12 часов
+            icon: mdi:thermometer-lines
+          - type: history-graph
+            entities:
+              - entity: sensor.processor_temperature
+                name: Raspberry Pi
+            hours_to_show: 12
+            refresh_interval: 60
+          - type: tile
+            entity: sensor.memory_use
+            name: Оперативная память · занято
+            icon: mdi:memory
+
+  - title: Устройства
+    path: devices
+    icon: mdi:devices
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      card:
+        type: markdown
+        content: >-
+          # 🌐 Устройства и диагностика
+
+          Проверка сигнала и состояния устройств. Служебные кнопки Xiaomi специально не добавлены в управление.
+    sections:
+      - type: grid
+        background:
+          color: '#143A4A'
+          opacity: 21
+        cards:
+          - type: heading
+            heading: Беспроводные устройства
+            icon: mdi:wifi
+          - type: tile
+            entity: sensor.r4s01_kettle_rssi
+            name: Redmond · чайник · RSSI
+            icon: mdi:kettle
+          - type: tile
+            entity: sensor.r4s0_gate_rssi
+            name: Шлюз · RSSI
+            icon: mdi:router-wireless
+          - type: history-graph
+            entities:
+              - entity: sensor.r4s01_kettle_rssi
+                name: Чайник
+              - entity: sensor.r4s0_gate_rssi
+                name: Шлюз
+            hours_to_show: 6
+            refresh_interval: 120
+      - type: grid
+        background:
+          color: '#2B3348'
+          opacity: 18
+        cards:
+          - type: heading
+            heading: Homeii Flow Engine
+            icon: mdi:monitor-dashboard
+          - type: tile
+            entity: switch.homeii_flow_engine_system_screensaver
+            name: Экранная заставка
+            icon: mdi:monitor-shimmer
+            color: cyan
+          - type: tile
+            entity: sensor.homeii_flow_engine_playback_today
+            name: Воспроизведение сегодня
+            icon: mdi:play-circle-outline
+      - type: grid
+        cards:
+          - type: heading
+            heading: Служебная заметка
+            icon: mdi:information-outline
+          - type: markdown
+            content: >-
+              **Как расширить эту панель**
+
+              По текущим данным известны медиа, Katana, Raspberry Pi, RSSI и Homeii. Свет, розетки, климат и охрана не добавлены, потому что их точные `entity_id` пока неизвестны.
+
+              Добавляй такие устройства через штатный редактор, не меняя остальные экраны.
+
+  - title: Управление
+    path: control
+    icon: mdi:toggle-switch-variant
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      card:
+        type: markdown
+        content: >-
+          Свет, переключатели, климат, шторы, сценарии и действия. Новые доступные сущности добавляются автоматически.
+    sections:
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '💡 Свет'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: light
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🔌 Выключатели и розетки'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: switch
+                - domain: input_boolean
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🌡️ Климат и обогрев'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: climate
+                - domain: water_heater
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🌀 Вентиляторы и увлажнение'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: fan
+                - domain: humidifier
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🪟 Шторы и жалюзи'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: cover
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🔐 Замки и сигнализация'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: lock
+                - domain: alarm_control_panel
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🤖 Пылесосы, роботы'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: vacuum
+                - domain: lawn_mower
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🎬 Сцены и скрипты'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: scene
+                - domain: script
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🎛️ Числа и выбор'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: number
+                - domain: select
+                - domain: input_number
+                - domain: input_select
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '▶️ Кнопки и действия'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: button
+                - domain: input_button
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🤖 Автоматизации'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: automation
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🕰️ Таймеры и счётчики'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: timer
+                - domain: counter
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+
+  - title: Датчики
+    path: sensors
+    icon: mdi:chart-areaspline
+    type: sections
+    max_columns: 3
+    theme: Aurora Home
+    header:
+      layout: responsive
+      card:
+        type: markdown
+        content: >-
+          Диагностика, Zigbee, компьютер, сервер и наблюдение. Сущности показываются автоматически, даже если их не было в первой версии Aurora.
+    sections:
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🌡️ Температура'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: sensor
+                  attributes:
+                    device_class: temperature
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '💧 Влажность'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: sensor
+                  attributes:
+                    device_class: humidity
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🔋 Заряд батарей'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: sensor
+                  attributes:
+                    device_class: battery
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '⚡ Энергия, мощность, ток'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: sensor
+                  attributes:
+                    device_class: energy
+                - domain: sensor
+                  attributes:
+                    device_class: power
+                - domain: sensor
+                  attributes:
+                    device_class: current
+                - domain: sensor
+                  attributes:
+                    device_class: voltage
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '📈 Остальные числовые датчики'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: sensor
+              exclude:
+                - domain: sensor
+                  attributes:
+                    device_class: temperature
+                - domain: sensor
+                  attributes:
+                    device_class: humidity
+                - domain: sensor
+                  attributes:
+                    device_class: battery
+                - domain: sensor
+                  attributes:
+                    device_class: energy
+                - domain: sensor
+                  attributes:
+                    device_class: power
+                - domain: sensor
+                  attributes:
+                    device_class: current
+                - domain: sensor
+                  attributes:
+                    device_class: voltage
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🚨 Бинарные датчики'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: binary_sensor
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🌤️ Погода и солнце'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: weather
+                - domain: sun
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '📍 Люди и присутствие'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: person
+                - domain: device_tracker
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🎥 Камеры'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: camera
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🔄 Обновления и события'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: update
+                - domain: event
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '🎵 Все медиаплееры'
+              show_header_toggle: false
+            filter:
+              include:
+                - domain: media_player
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
+
+  - title: Все сущности
+    path: catalog
+    icon: mdi:view-list-outline
+    type: sections
+    max_columns: 1
+    theme: Aurora Home
+    header:
+      layout: responsive
+      card:
+        type: markdown
+        content: >-
+          Все объекты из текущего состояния Home Assistant, включая служебные и диагностические.
+
+          **Сейчас активно:** {{ states | list | count }} сущностей.
+
+          Отключённые в реестре сущности без состояния не будут отображаться здесь.
+    sections:
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: '📚 Все активные сущности'
+              show_header_toggle: false
+            filter:
+              include:
+                - {}
+            unique: true
+            show_empty: false
+            sort:
+              method: name
+              ignore_case: true
