@@ -15,6 +15,18 @@ fail() { say "ОШИБКА: $*" >&2; exit 1; }
 [ -f "$CONFIG_FILE" ] || fail "Файл $CONFIG_FILE не найден. Запускай через Terminal & SSH в Home Assistant OS."
 command -v awk >/dev/null 2>&1 || fail "Не найдена утилита awk."
 command -v ha >/dev/null 2>&1 || fail "Не найден Home Assistant CLI (ha)."
+
+# Do not modify configuration.yaml if it was already invalid before Aurora.
+# This distinguishes pre-existing YAML errors from installer-generated errors.
+say "Проверяю исходную конфигурацию Home Assistant до изменений..."
+BASELINE_LOG="$(mktemp)"
+if ! ha core check > "$BASELINE_LOG" 2>&1; then
+  tail -n 32 "$BASELINE_LOG" >&2
+  rm -f "$BASELINE_LOG"
+  fail "Исходная конфигурация уже содержит ошибку. Никаких изменений не выполнено. Исправь её до установки Aurora."
+fi
+rm -f "$BASELINE_LOG"
+say "Исходная конфигурация прошла проверку."
 if [ -f "$DASH_FILE" ]; then
   say "Aurora Home уже существует: $DASH_FILE"
   say "Для защиты твоих изменений повторный запуск не перезаписывает панель."
